@@ -1,0 +1,11 @@
+DNSHosting.Models.DNSHostingConfig:
+  Username: login
+  Password: password
+  Domains:
+    - Domain: domain.com.ua
+      Maps:
+        - 
+          Entity: sensor.netdaemon_huawei_router_public_ip
+          Subdomains: 
+            - "@"
+            - "hassio"

@@ -1,0 +1,4 @@
+HuaweiWS5200.Models.HuaweiWS5200Config:
+  Username: admin
+  Password: password
+  Uri: http://172.16.200.1/
