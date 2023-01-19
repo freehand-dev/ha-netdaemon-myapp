@@ -92,7 +92,7 @@ namespace HuaweiWS5200
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"{_client.GetType().Name} GetDeviceInfoAsync");
+                _logger.LogError($"{_client.GetType().Name} GetDeviceInfoAsync {e.Message}");
             }
 
 
@@ -119,7 +119,7 @@ namespace HuaweiWS5200
             }                
             catch (Exception e)
             {
-                _logger.LogError(e, $"{_client.GetType().Name} GetWanDiagnoseAsync");
+                _logger.LogError($"{_client.GetType().Name} GetWanDiagnoseAsync {e.Message}");
             }
 
             //
@@ -144,7 +144,7 @@ namespace HuaweiWS5200
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"{_client.GetType().Name} GetHostInfoAsync");
+                _logger.LogError($"{_client.GetType().Name} GetHostInfoAsync {e.Message}");
             }
 
             //
@@ -163,7 +163,7 @@ namespace HuaweiWS5200
             }
             catch (Exception e)
             {
-                _logger.LogError(e, $"{_client.GetType().Name} GetGuestNetworkAsync");
+                _logger.LogError($"{_client.GetType().Name} GetGuestNetworkAsync {e.Message}");
             }
         }
 
@@ -180,7 +180,7 @@ namespace HuaweiWS5200
 
             // 
             await _entityManager.CreateAsync(this._internetConnectionEntityId,
-                    new EntityCreationOptions(Name: "Internet connection", DeviceClass: "connectivity", PayloadOn: "Connected", PayloadOff: "Disconnected"),
+                    new EntityCreationOptions(Name: "Internet connection", DeviceClass: "connectivity", PayloadOn: "Connected", PayloadOff: "DisConnected"),
                     new
                     {
                         icon = "mdi:web"
@@ -268,7 +268,7 @@ namespace HuaweiWS5200
                   } 
                   catch (Exception e)
                   {
-                      _logger.LogError(e, $"PrepareCommandSubscriptionAsync[{this._guestNetworkEntityId}]");
+                      _logger.LogError($"PrepareCommandSubscriptionAsync[{this._guestNetworkEntityId}] {e.Message}");
                   }
               }));
 
@@ -283,7 +283,7 @@ namespace HuaweiWS5200
                   }
                   catch (Exception e)
                   {
-                      _logger.LogError(e, "Scheduler error");
+                      _logger.LogError($"Scheduler error  {e.Message}");
                   }
               });
         }

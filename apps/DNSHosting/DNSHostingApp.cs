@@ -71,7 +71,7 @@ namespace DNSHosting
                         }
                         catch (Exception e)
                         {
-                            _logger.LogError(e, $"Subscribe[{map.Entity.EntityId}]");
+                            _logger.LogError($"Subscribe[{map.Entity.EntityId}] {e.Message}");
                         }
                     });
                 }
@@ -80,32 +80,38 @@ namespace DNSHosting
 
         public async Task InitializeAsync(CancellationToken cancellationToken)
         {
-
-            await _client.LoginAsync(this._config.Value.Username ?? throw new Exception("Username is null"), this._config.Value.Password ?? throw new Exception("Password is null"));
             try
             {
-                foreach (var item in this._config.Value.Domains)
+                await _client.LoginAsync(this._config.Value.Username ?? throw new Exception("Username is null"), this._config.Value.Password ?? throw new Exception("Password is null"));
+                try
                 {
-                    string domain = item.Domain ?? throw new Exception("Domain is null");
-                    foreach (var map in item.Maps)
+                    foreach (var item in this._config.Value.Domains)
                     {
-                        string? state = map.Entity?.State;
-                        if (!string.IsNullOrWhiteSpace(state))
+                        string domain = item.Domain ?? throw new Exception("Domain is null");
+                        foreach (var map in item.Maps)
                         {
-                            foreach (var subdomain in map.Subdomains)
+                            string? state = map.Entity?.State;
+                            if (!string.IsNullOrWhiteSpace(state))
                             {
-                                this._logger.LogDebug($"AddOrUpdateRecord: {subdomain}.{domain} A {state}"); 
+                                foreach (var subdomain in map.Subdomains)
+                                {
+                                    this._logger.LogDebug($"AddOrUpdateRecord: {subdomain}.{domain} A {state}");
+                                }
+                                await _client.AddOrUpdateRecord(domain, "A", map.Subdomains, state);
                             }
-                            await _client.AddOrUpdateRecord(domain, "A", map.Subdomains, state);
-                        }
 
+                        }
                     }
                 }
+                finally
+                {
+                    await _client.LogoutAsync();
+                }
             }
-            finally
+            catch (Exception e)
             {
-                await _client.LogoutAsync();
-            }
+                _logger.LogError($"InitializeAsync {e.Message}");
+            }        
         }
     }
 
